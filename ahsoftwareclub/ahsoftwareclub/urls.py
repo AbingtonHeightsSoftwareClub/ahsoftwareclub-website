@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('monopoly/', include("monopoly.urls")),
+    path('chatroom/', include("chatroom.urls")),
     path('admin/', admin.site.urls),
 ]
