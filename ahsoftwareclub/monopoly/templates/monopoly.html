@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{url_for('static', filename='css/monopoly.css')}}" />
+
+
+<main>
+
+<div class="console">
+    <h3 id="console">Example Text</h3>
+</div>
+<div class="board" id="">
+    <div class="parking" id="21">
+        <span>21</span>
+    </div>
+    <div class="cop" id="31">
+        <span>31</span>
+    </div>
+    <div class="jail" id="11">
+        <span>11</span>
+    </div>
+    <div class="go" id="1">
+        <span>1</span>
+    </div>
+
+    <div class="center"></div>
+
+
+</div>
+
+</main>
+
+
+
+<script
+        src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+        integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+        crossorigin="anonymous"
+></script>
+<script
+        type="module"
+        src="{{url_for('static', filename='js/monopoly.js')}}"
+></script>
+
+
+
+{% endblock %}
