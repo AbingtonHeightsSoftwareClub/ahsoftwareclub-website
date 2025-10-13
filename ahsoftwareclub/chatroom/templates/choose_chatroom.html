@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %} Chatroom {% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{url_for('static', filename='css/chatroom/choose.css')}}"/>
+
+<div class="box">
+    <div class="room add">
+    <label for="add">New Room</label>
+    <input type="number" name="New Room" id="add"><br/>
+    <label for="new-room-password">Password (optional): </label>
+    <input type="password" name="new-room-password" id="new-room-password">
+    <br/>
+    </div>
+
+    {% for room in rooms %}
+    <div class="room">
+        {% if room in private_rooms %}
+        <button onclick="chose(this, true)" value="{{room}}" class="buttons">{{room}}</button>
+            <label for="room-password">Password (required): </label>
+            <input type="password" name="room-password-{{ room }}" id="room-password-{{ room }}">
+        {% else %}
+        <button onclick="chose(this, false)" value="{{room}}" class="buttons">{{room}}</button>
+        {% endif %}
+        <!-- Only show active users if there are any -->
+        <div class="active_users">
+        {% if active_users[room]|length > 0 %}
+                <span>Active Users:</span>
+                    {% for user in active_users[room] %}
+                <span>{{ user }}, </span>
+            {% endfor %}
+        {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script
+        src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+        integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+        crossorigin="anonymous"
+></script>
+
+<script
+        type="module"
+        src="{{url_for('static', filename='js/choose_chatroom.js')}}"
+></script>
+
+
+{% endblock %}
