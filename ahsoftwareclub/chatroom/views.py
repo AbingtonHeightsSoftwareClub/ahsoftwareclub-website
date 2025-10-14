@@ -3,6 +3,12 @@ from django.shortcuts import render
 # Create your views here.
 
 from django.http import HttpResponse
+from django.template import loader
 
-def index(request):
-    return HttpResponse("Hello world. You're at the chatroom page.")
+def chatroom(request):
+    template = loader.get_template('chatroom.html')
+    return HttpResponse(template.render())
+
+def choose_chatroom(request):
+    template = loader.get_template('choose_chatroom.html')
+    return HttpResponse(template.render())
