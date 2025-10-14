@@ -4,7 +4,9 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="{{url_for('static', filename='css/chatroom/choose.css')}}"/>
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'chatroom/choose_chatroom.css' %}">
 
 <div class="box">
     <div class="room add">
