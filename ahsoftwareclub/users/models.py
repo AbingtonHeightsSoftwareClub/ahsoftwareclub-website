@@ -10,6 +10,3 @@ class User(models.Model):
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     player_id = models.AutoField(primary_key=True)
-
-class ActiveUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
