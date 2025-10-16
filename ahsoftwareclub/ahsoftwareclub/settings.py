@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'chatroom',
     'monopoly',
     'users',
+    'home',
 ]
 
 MIDDLEWARE = [
