@@ -6,5 +6,5 @@ from django.http import HttpResponse
 from django.template import loader
 
 def monopoly(request):
-    template = loader.get_template('monopoly.html')
+    template = loader.get_template('monopoly/monopoly.html')
     return HttpResponse(template.render())
