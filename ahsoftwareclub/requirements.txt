@@ -1,7 +1,12 @@
 asgiref==3.10.0
 Brotli==1.1.0
+click==8.3.0
 dj-database-url==3.0.1
 Django==5.2.7
+gunicorn==23.0.0
+h11==0.16.0
+packaging==25.0
 pip==24.3.1
 sqlparse==0.5.3
+uvicorn==0.37.0
 whitenoise==6.11.0
