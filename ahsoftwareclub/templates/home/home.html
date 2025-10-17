@@ -1,9 +1,11 @@
-{% load static %}
+{% extends 'base.html' %}
+
+{% block content %}
 <div style="margin: 10%; text-align: center;">
     <h1>Welcome to the Software Club Website!!</h1>
     <h2>Here is some infomation about us!</h2>
 </div>
-
+{% load static %}
 <hr>
 
 <div style="display: flex; align-items: flex-start; margin: 5%;">
@@ -72,3 +74,4 @@
     <a href="mailto:allisons27@hsnet.ahsd.org">Contact Us!</a>
     <hr>
 </footer>
+{% endblock %}

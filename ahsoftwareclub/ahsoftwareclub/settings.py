@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-s$#$a$&ucfwtmf-=^_d9d$x+m_nxn$$rws7y28*%ad6!_&8l10'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["www.ahsoftware.club"]
+ALLOWED_HOSTS = ["www.ahsoftware.club", '127.0.0.1']
 
 
 # Application definition
@@ -60,7 +60,7 @@ ROOT_URLCONF = 'ahsoftwareclub.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+
     },
 ]
 
