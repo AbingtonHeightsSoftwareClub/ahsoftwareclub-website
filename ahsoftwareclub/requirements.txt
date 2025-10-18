@@ -10,3 +10,4 @@ pip==24.3.1
 sqlparse==0.5.3
 uvicorn==0.37.0
 whitenoise==6.11.0
+channels==4.3.1

@@ -32,6 +32,8 @@ ALLOWED_HOSTS = ["www.ahsoftware.club", '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,6 +76,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ahsoftwareclub.wsgi.application'
+ASGI_APPLICATION = 'ahsoftwareclub.asgi.application'
+
 
 
 # Database
