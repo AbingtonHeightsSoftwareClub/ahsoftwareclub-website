@@ -14,10 +14,18 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.core.asgi import get_asgi_application
 
-from channels.routing import ProtocolTypeRouter
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ahsoftwareclub.settings")
+# Initialize Django ASGI application early to ensure the AppRegistry
+# is populated before importing code that may import ORM models.
+django_asgi_app = get_asgi_application()
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ahsoftwareclub.settings')
+from chatroom.routing import websocket_urlpatterns
 
-application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-})
+application = ProtocolTypeRouter(
+    {
+        "http": django_asgi_app,
+        "websocket": AllowedHostsOriginValidator(
+            AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
+        ),
+    }
+)
