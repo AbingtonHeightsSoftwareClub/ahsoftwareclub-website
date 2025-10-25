@@ -4,7 +4,8 @@ Defines how Django processes web sockets (Instantaneous communication)
 
 import json
 
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
+
 
 class ChatConsumer(WebsocketConsumer):
 
@@ -17,5 +18,5 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        print("revieed data")
+        print("received data")
         self.send(text_data=json.dumps({"message":message}))
