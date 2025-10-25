@@ -32,6 +32,8 @@ ALLOWED_HOSTS = ["www.ahsoftware.club", '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -104,7 +106,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+# Daphne
+ASGI_APPLICATION = "ahsoftwareclub.asgi.application"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -142,3 +145,4 @@ if not DEBUG:
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
