@@ -5,33 +5,64 @@
 
 {% block content %}
 
-{% load static %}
+    {% load static %}
 
-<link rel="stylesheet" href="{% static 'chatroom/choose_chatroom.css' %}">
+    <link rel="stylesheet" href="{% static 'chatroom/choose_chatroom.css' %}">
 
-<div class="box">
-    <div class="room add">
-    <label for="add">New Room</label>
-    <input type="number" name="New Room" id="add"><br/>
-    <label for="new-room-password">Password (optional): </label>
-    <input type="password" name="new-room-password" id="new-room-password">
-    <br/>
-    </div>
-
-    <div class="room">
-        {% if room in private_rooms %}
+    <div class="box">
+        <div class="room add">
+            <label for="add">New Room</label>
+            <form onsubmit="createRoom(document.getElementById('add').textContent)">
+                <input type="text" name="New Room" id="add"><br/>
+            </form>
+            <!-- <label for="new-room-password">Password (optional): </label>
+            <input type="password" name="new-room-password" id="new-room-password">
+            <br/> -->
+        </div>
+        {% for room in rooms %}
+            <div class="room">
+                <!-- {% if room in private_rooms %}
         <button onclick="chose(this, true)" value="{{room}}" class="buttons">{{room}}</button>
             <label for="room-password">Password (required): </label>
             <input type="password" name="room-password-{{ room }}" id="room-password-{{ room }}">
-        {% else %}
-        <button onclick="chose(this, false)" value="{{room}}" class="buttons">{{room}}</button>
-        {% endif %}
-        <!-- Only show active users if there are any -->
-        <div class="active_users">
-                <span>Active Users:</span>
-                <span>placeholder_user</span>
-        </div>
+        {% else %} -->
+                    <button onclick="chose(this, false)" value="{{ room }}" class="buttons">{{ room }}</button>
+                {% endif %}
+                <!-- Only show active users if there are any -->
+                <div class="active_users">
+                    <span>Active Users:</span>
+                    <span>placeholder_user</span>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-</div>
+
+    <script>
+        function createRoom(roomName) {
+            const postData = {
+                'room_name' : roomName,
+            };
+
+            fetch('http://localhost:8000/choose_chatroom', {
+                method: 'POST', // Specify the method as POST
+                headers: {
+                    'Content-Type': 'application/json' // Indicate that the body is JSON
+                },
+                body: JSON.stringify(postData) // Convert the JavaScript object to a JSON string
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json(); // Parse the JSON response
+                })
+                .then(data => {
+                    console.log('Success:', data); // Handle the successful response data
+                })
+                .catch(error => {
+                    console.error('Error:', error); // Handle any errors during the fetch operation
+                });
+        }
+    </script>
 
 {% endblock %}
