@@ -12,8 +12,9 @@
     <div class="box">
         <div class="room add">
             <label for="add">New Room</label>
-            <form onsubmit="createRoom(document.getElementById('add').textContent)">
-                <input type="text" name="New Room" id="add"><br/>
+            <form method="POST" id="new-room-form">
+                <input type="text" name="room-name" id="room-name"><br/>
+                <input type="submit">
             </form>
             <!-- <label for="new-room-password">Password (optional): </label>
             <input type="password" name="new-room-password" id="new-room-password">
@@ -38,31 +39,19 @@
     </div>
 
     <script>
-        function createRoom(roomName) {
-            const postData = {
-                'room_name' : roomName,
-            };
+        form = document.getElementById("new-room-form");
 
-            fetch('http://localhost:8000/choose_chatroom', {
-                method: 'POST', // Specify the method as POST
-                headers: {
-                    'Content-Type': 'application/json' // Indicate that the body is JSON
-                },
-                body: JSON.stringify(postData) // Convert the JavaScript object to a JSON string
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json(); // Parse the JSON response
-                })
-                .then(data => {
-                    console.log('Success:', data); // Handle the successful response data
-                })
-                .catch(error => {
-                    console.error('Error:', error); // Handle any errors during the fetch operation
-                });
-        }
+        form.addEventListener('submit', async (e) => {
+            // get the form data as a FormData object since we're fetching html instead of json
+            const formData = new FormData(form);
+
+            // jinja format so that it works on localhost and in production
+            const res = fetch("{% url 'choose_chatroom' %}", {
+                method: "POST",
+                body: formData,
+            });
+        });
+
     </script>
 
 {% endblock %}
