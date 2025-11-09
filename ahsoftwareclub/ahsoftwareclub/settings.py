@@ -145,7 +145,10 @@ STATIC_URL = '/static/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = os.environ['DEBUG']
+if os.environ['DEBUG']=="True":
+    DEBUG = True
+else:
+    DEBUG = False
 
 if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
