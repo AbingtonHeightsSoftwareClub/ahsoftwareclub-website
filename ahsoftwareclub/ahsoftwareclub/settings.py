@@ -145,7 +145,7 @@ STATIC_URL = '/static/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-if os.environ['DEBUG']=="True":
+if os.environ.get('DEBUG', 'False')=="True":
     DEBUG = True
 else:
     DEBUG = False
@@ -172,8 +172,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'email'
         ],
         'APP': {
-            'client_id': os.environ['CLIENT_ID'],
-            'secret': os.environ['CLIENT_SECRET'],
+            'client_id': os.environ.get('CLIENT_ID', ''),
+            'secret': os.environ.get('CLIENT_SECRET', ''),
         },
         'AUTH_PARAMS': {
             'access_type': 'online',
