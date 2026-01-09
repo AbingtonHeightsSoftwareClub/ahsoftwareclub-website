@@ -1,7 +1,5 @@
 To run locally you MUST:
 
-1. run `pip install -r requirements.txt`
+1. first run `bash build.sh`
 
-2. create a file called '.env' in the first ahsoftwareclub directory with the contents:\
-`CLIENT_ID=''`\
-`CLIENT_SECRET''`
+2. then run `python manage.py runserver`
