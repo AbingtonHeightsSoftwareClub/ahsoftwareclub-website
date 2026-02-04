@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-s$#$a$&ucfwtmf-=^_d9d$x+m_nxn$$rws7y28*%ad6!_&8l10
 
 
 
-ALLOWED_HOSTS = ["www.ahsoftware.club", '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ["www.ahsoftware.club", '127.0.0.1', 'localhost', "website-wq23.onrender.com"]
 
 # Application definition
 

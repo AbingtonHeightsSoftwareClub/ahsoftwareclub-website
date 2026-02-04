@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8"/>
     <title>{% block title %}{% endblock %}</title>
-
+    {% load static %}
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     {% block js %}{% endblock %}
 </head>
 
