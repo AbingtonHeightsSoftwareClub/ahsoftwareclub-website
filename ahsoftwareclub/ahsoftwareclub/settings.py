@@ -26,10 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-s$#$a$&ucfwtmf-=^_d9d$x+m_nxn$$rws7y28*%ad6!_&8l10'
 
-
-
+CSRF_TRUSTED_ORIGINS = ["www.ahsoftware.club", '127.0.0.1', 'localhost', "website-wq23.onrender.com"]
 ALLOWED_HOSTS = ["www.ahsoftware.club", '127.0.0.1', 'localhost', "website-wq23.onrender.com"]
-
+CORS_ORIGIN_WHITELIST = ["www.ahsoftware.club", '127.0.0.1', 'localhost', "website-wq23.onrender.com"]
 # Application definition
 
 INSTALLED_APPS = [
@@ -142,10 +141,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 
-if os.environ.get('DEBUG', 'False')=="True":
+if os.environ.get('DEBUG', 'False') == "True":
     DEBUG = True
 else:
     DEBUG = False
@@ -194,4 +192,3 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
