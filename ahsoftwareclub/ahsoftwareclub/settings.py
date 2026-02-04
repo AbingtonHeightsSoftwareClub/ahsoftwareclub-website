@@ -188,7 +188,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("ahsoftware.club", 6379)],
+            "hosts": [("https://ahsoftware.club", 6379)],
         },
     },
 }
