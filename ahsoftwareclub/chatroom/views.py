@@ -1,5 +1,6 @@
 import time
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.contrib.auth.models import Group
@@ -11,7 +12,7 @@ from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from sqlalchemy.sql.functions import user
 
-
+@login_required(login_url='/accounts/login/')
 def chatroom(request, room_name):
     user = request.user
     all_groups_list = []
@@ -25,12 +26,13 @@ def chatroom(request, room_name):
     room = Group.objects.get(name=room_name)
     # add the user to the room
     room.user_set.add(user)
-    return render(request, 'chatroom/chatroom.html', context={'room_name': room_name, 'active_users' : room.user_set.all()})
+    return render(request, 'chatroom/chatroom.html', context={'room_name': room_name, 'active_users' : room.user_set.all(), room_name:room_name})
 
 # Configure CSRF when we add room passwords to make things secure.
 @csrf_exempt
 def choose_chatroom(request):
     if request.method == "POST":
+        print(request.POST.keys())
         room_name = request.POST.get('room-name')
         room_group, created = Group.objects.get_or_create(name=room_name)
         return redirect(chatroom, room_name)

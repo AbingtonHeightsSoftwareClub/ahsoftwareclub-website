@@ -1,7 +1,16 @@
-let url =  `ws://${window.location.host}/ws/socket-server/`
+const roomName = JSON.parse(document.getElementById("room-name").textContent);
 
-const chatSocket = new WebSocket(url)
 
-chatSocket.onmessage = function(e) {
-    
+const chatSocket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/chat/'
+    + roomName
+    + '/'
+);
+
+
+chatSocket.onmessage = function(event){
+    const data = JSON.parse(event.data);
+    document.querySelector("#chat-log").value += (data.message + '\n');
 }
