@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Monopoly {% endblock %}
+
+{% block content %}
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'monopoly/choose_game.css' %}">
+
+    <div class="box">
+        <div class="room add">
+            <label for="add">New Game</label>
+            <form method="POST" id="new-room-form">
+                <input type="text" name="room-name" id="room-name"><br/>
+                <input type="submit">
+            </form>
+            <!-- <label for="new-room-password">Password (optional): </label>
+            <input type="password" name="new-room-password" id="new-room-password">
+            <br/> -->
+        </div>
+        {% for room in rooms %}
+            <div class="room">
+                <!-- {% if room in private_rooms %}
+        <button onclick="chose(this, true)" value="{{room}}" class="buttons">{{room}}</button>
+            <label for="room-password">Password (required): </label>
+            <input type="password" name="room-password-{{ room }}" id="room-password-{{ room }}">
+        {% else %} -->
+                    <button onclick="chose(this, false)" value="{{ room }}" class="buttons">{{ room }}</button>
+                {% endif %}
+                <!-- Only show active users if there are any -->
+                <div class="active_users">
+                    <span>Active Users:</span>
+                    <span>placeholder_user</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        form = document.getElementById("new-room-form");
+
+        form.addEventListener('submit', async (e) => {
+            // get the form data as a FormData object since we're fetching html instead of json
+            const formData = new FormData(form);
+
+            // jinja format so that it works on localhost and in production
+            const res = fetch("{% url 'choose_game' %}", {
+                method: "POST",
+                body: formData,
+            });
+        });
+
+    </script>
+
+{% endblock %}
