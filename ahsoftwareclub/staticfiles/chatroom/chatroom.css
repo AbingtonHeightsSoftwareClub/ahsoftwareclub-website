@@ -1,0 +1,114 @@
+html, body, main {
+    height: 100%;
+   	overflow: hidden;
+    color: #ffffff !important;
+    background-color: #575757 !important;
+	font-family: Verdana, Geneva, sans-serif;
+    word-wrap: normal;
+}
+
+.chat-container {
+	height: 85%;
+    margin-top: 5px;
+}
+
+#room{
+	color: #ffffff;
+    font-weight: bold;
+}
+
+#chat-form {
+	display: flex;    
+    border: 1px solid #000000;
+	justify-content: center;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: #3f3f3f;
+    z-index: 1;
+}
+
+input, select, textarea{
+    color: #ffffff;
+}
+
+.chat-box {
+	position: relative;
+    height: 97.5%;
+    width: 80%;
+    float: left;
+    padding: 10px;
+    color: #ffffff;
+    background-color: #3f3f3f;
+    border: 1px solid #000000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: gray;
+}
+
+.user-count {
+    display: flex;
+    flex-direction: column;
+    height: 106%;
+    width: 10%;
+	text-align: center;
+    padding: 10px;
+    color: #ffffff;
+    background-color: #3f3f3f;
+    border: 1px solid #000000;
+    overflow: auto;
+}
+
+.room-list {
+    display: flex;
+    flex-direction: column;
+    height: 106%;
+	text-align: center;
+    width: 10%;
+    padding: 10px;
+    float: left;
+    color: #ffffff;
+    background-color: #3f3f3f;
+    border: 1px solid #000000;
+    overflow: auto;
+}
+
+.typing-bar {
+	text-align: left;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 5px;
+    overflow: auto;
+    color: #3f3f3f;
+    font-size: 0.8em;
+}
+
+#message-input {
+	position: fixed;
+	background-color: #3f3f3f;
+    border: 1px solid #000000;
+    height: 7.5%;
+    width: 80%;
+    bottom: 0;
+    padding: 10px;
+}
+#room-name-bar {
+	width: 100%;
+    height: 4%;
+	border: 1px solid #000000;
+    color: #ffffff;
+    background: #3f3f3f;
+    font-size: 0.95em;
+    padding:2px;
+}
+
+#send-button {
+	display: none;
+}
