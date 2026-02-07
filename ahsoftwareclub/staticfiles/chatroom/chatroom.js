@@ -9,23 +9,22 @@ const chatSocket = new WebSocket(
     + '/'
 );
 
-
 chatSocket.onmessage = function(event){
     const data = JSON.parse(event.data);
-    document.querySelector("#chat-log").value += (data.message + '\n');
+    document.getElementById("chat-box").innerHTML += (data.message + '<br/>');
 }
-document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.key === 'Enter') {  // enter, return
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
 
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
-        };
+document.getElementById('chat-form').focus();
+
+document.getElementById('chat-form').addEventListener('submit', handleChatMessage);
+
+function handleChatMessage(event) {
+    // prevent page refresh
+    event.preventDefault();
+    const messageInputDom = document.getElementById('message-input');
+    const message = messageInputDom.value;
+    chatSocket.send(JSON.stringify({ 
+        'message': message
+    }));
+    messageInputDom.value = '';
+}
