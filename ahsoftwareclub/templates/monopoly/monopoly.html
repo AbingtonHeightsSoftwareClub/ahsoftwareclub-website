@@ -10,7 +10,6 @@
 
 
 <main>
-
 <div class="console">
     <h3 id="console">Example Text</h3>
 </div>
@@ -34,5 +33,6 @@
 </div>
 
 </main>
-
+{{ room_name|json_script:"room-name" }}
+<script src="{% static "monopoly/monopoly.js" %}"></script>
 {% endblock %}
