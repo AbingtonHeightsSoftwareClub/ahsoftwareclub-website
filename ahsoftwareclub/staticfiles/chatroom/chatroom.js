@@ -9,7 +9,23 @@ const chatSocket = new WebSocket(
     + '/'
 );
 
+chatSocket.onopen = function (event) {
+    const data = JSON.parse(event.data);
+    const payload = data.message;
+
+    const usernameList = payload['active_users'];
+    const userIDs = payload['active_user_ids'];
+    for (let i = 0; i < userIDs.length; i++) {
+        if (document.getElementById(userIDs[i]) == null) {
+            const userElement = document.createElement('div');
+            userElement.id = userIDs[i];
+            userElement.innerHTML = usernameList[i];
+        }
+    }
+}
+
 chatSocket.onmessage = function (event) {
+    console.log(event)
     const data = JSON.parse(event.data);
     const message = data.message;
     const chatBox = document.getElementById("chat-box");
@@ -25,6 +41,22 @@ chatSocket.onmessage = function (event) {
     messageElement.innerHTML += (message['user_name'] + ": " + message['message_text'] + '<br/>');
 
     chatBox.appendChild(messageElement);
+
+    const usernameList = message['active_users'];
+    const userIDs = message['active_user_ids'];
+    for (let i = 0; i < userIDs.length; i++) {
+        if (document.getElementById(userIDs[i]) == null) {
+            const userElement = document.createElement('span');
+            userElement.id = userIDs[i];
+            userElement.innerHTML = usernameList[i];
+            document.getElementById('user-count').appendChild(userElement);
+        }
+    }
+    for(let user in document.getElementById('user-count').childNodes) {
+        if(! user.id in userIDs) {
+            document.removeChild(user)
+        }
+    }
 }
 
 document.getElementById('chat-form').focus();
@@ -42,5 +74,4 @@ function handleChatMessage(event) {
         }));
         messageInputDom.value = '';
     }
-
 }
