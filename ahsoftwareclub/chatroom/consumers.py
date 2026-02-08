@@ -4,6 +4,12 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.user_name = None
+        self.room_group_name = None
+        self.room_name = None
+
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
@@ -21,20 +27,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
+        print(text_data_json)
         message = text_data_json["message"]
-        print(message)
         # Send message to room group
         await self.channel_layer.group_send(
             
-            self.room_group_name, {"type": "chat.message", "message": message}
+            self.room_group_name, {"type": "chat.message", "message": message, "username": self.user_name}
         )
 
     # Receive message from room group
     async def chat_message(self, event):
         message = event["message"]
+        username = event["username"]
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"message": message}))
+        await self.send(text_data=json.dumps({"message": message, "username":username}))
 
     @database_sync_to_async
     def get_name(self):
