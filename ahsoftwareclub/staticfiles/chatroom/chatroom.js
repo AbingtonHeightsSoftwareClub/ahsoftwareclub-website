@@ -37,39 +37,64 @@ const chatSocket = new WebSocket(connection)
 const chatBox = document.getElementById("chat-box");
 chatSocket.onmessage = function (event) {
     const data = JSON.parse(event.data);
-    const message = data.message;
-    const username = data.username;
-    let message_div = document.createElement("div");
+    console.log(data)
+    switch (data.type) {
+        case "chat_message":
+            const message = data.message;
+            const username = data.username;
+            let message_div = document.createElement("div");
 
-    let last_node = chatBox.lastChild;
-    if (last_node.firstChild != null) {
-        console.log(last_node.className);
-        if (last_node.firstChild.className !== username) {
-            let username_span = document.createElement("span");
+            let last_node = chatBox.lastChild;
+            if (last_node.firstChild != null) {
+                console.log(last_node.className);
+                if (last_node.firstChild.className !== username) {
+                    let username_span = document.createElement("span");
 
-            username_span.textContent = username;
-            username_span.classList.add(username);
+                    username_span.textContent = username;
+                    username_span.classList.add(username);
 
-            username_span.classList.add("username");
-            message_div.appendChild(username_span);
+                    username_span.classList.add("username");
+                    message_div.appendChild(username_span);
 
-        }
+                }
 
-    } else {
-        let username_span = document.createElement("span");
-        username_span.textContent = username;
-        username_span.classList.add(username);
+            } else {
+                let username_span = document.createElement("span");
+                username_span.textContent = username;
+                username_span.classList.add(username);
 
-        username_span.classList.add("username");
+                username_span.classList.add("username");
 
-        message_div.appendChild(username_span);
+                message_div.appendChild(username_span);
+            }
+            let message_span = document.createElement("span");
+            message_span.textContent = message;
+            message_span.className = username;
+            message_div.appendChild(message_span);
+
+            chatBox.appendChild(message_div);
+            break;
+        case "chat_connect":
+            const userBox = document.getElementById('user-count')
+            const activeUsers = data.activeUsers;
+            const activeUserIDs = data.activeUserIDs;
+
+            for (let i = 0; i < activeUsers.length; i++) {
+                if(document.getElementById(activeUserIDs[i]) == null) {
+                    const userElement = document.createElement("div");
+                    userElement.textContent += activeUsers[i];
+                    userElement.id = activeUserIDs[i];
+                    userBox.appendChild(userElement);
+                }
+            }
+            break;
+        case "chat_disconnect":
+            if(document.getElementById(data.userID) !== null) {
+                document.getElementById(data.userID).remove()
+            }
+            break;
     }
-    let message_span = document.createElement("span");
-    message_span.textContent = message;
-    message_span.className = username;
-    message_div.appendChild(message_span);
 
-    chatBox.appendChild(message_div);
 }
 
 
