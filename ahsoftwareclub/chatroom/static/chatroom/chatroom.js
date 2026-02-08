@@ -93,7 +93,7 @@ function handle_chat_message(data) {
 
     }
     let message_span = document.createElement("span");
-    message_span.textContent = message;
+    message_span.innerHTML = message;
     message_span.className = username;
     message_div.appendChild(message_span);
 
