@@ -19,13 +19,16 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ahsoftwareclub.settings")
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
 
-from chatroom.routing import websocket_urlpatterns
+# The urls for all websockets need to be imported so we put them all together
+from chatroom.routing import chatroom_websocket_urlpatterns
+from monopoly.routing import monopoly_websocket_urlpatterns
 
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
-            AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
+            # Each set of url patterns is a list of routes. We add together each list to combine the lists, which combine the routes
+            AuthMiddlewareStack(URLRouter(chatroom_websocket_urlpatterns + monopoly_websocket_urlpatterns))
         ),
     }
 )
