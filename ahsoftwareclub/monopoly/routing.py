@@ -12,6 +12,6 @@ from . import consumers
     That is what is in the scope value
 
     """
-websocket_urlpatterns = [
+monopoly_websocket_urlpatterns = [
     re_path(r"ws/monopoly/(?P<room_name>\w+)/$", consumers.MonopolyConsumer.as_asgi()),
 ]
