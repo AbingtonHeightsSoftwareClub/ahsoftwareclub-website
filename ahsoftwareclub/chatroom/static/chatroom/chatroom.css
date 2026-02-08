@@ -32,7 +32,8 @@ input, select, textarea{
 }
 
 .chat-box {
-	position: relative;
+	display: flex;
+    flex-direction: column;
     height: 97.5%;
     width: 80%;
     float: left;
@@ -43,6 +44,12 @@ input, select, textarea{
     overflow-y: auto;
     overflow-x: hidden;
     font-family: Verdana, Geneva, sans-serif;
+}
+
+
+.chat-box >  div{
+    display: flex;
+    flex-direction: column;
 }
 
 .timestamp {
@@ -96,6 +103,7 @@ input, select, textarea{
     width: 73%;
     bottom: 0;
     padding: 10px;
+    margin-bottom: 10px;
 }
 #room-name-bar {
 	width: 99%;
@@ -108,4 +116,8 @@ input, select, textarea{
 
 #send-button {
 	display: none;
+}
+
+.username{
+    font-weight: bolder;
 }
