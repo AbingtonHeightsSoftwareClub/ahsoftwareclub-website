@@ -1,16 +1,28 @@
 import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
+
+
 
 class MonopolyConsumer(AsyncWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.room_name = None
+        self.room_group_name = None
+        self.user_name = None
+
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
+        self.user_name = await self.get_name()
 
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-
         await self.accept()
+        await self.send(text_data=json.dumps({"type": "chat.connection", "username": self.user_name}))
+
+
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -32,3 +44,12 @@ class MonopolyConsumer(AsyncWebsocketConsumer):
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({"message": message}))
+
+    @database_sync_to_async
+    def get_name(self):
+        user = self.scope["user"]
+        name = user.get_username()
+        print(name)
+        return name
+
+
