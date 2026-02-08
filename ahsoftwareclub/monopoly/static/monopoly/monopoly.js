@@ -40,7 +40,6 @@ const display = document.getElementById("console");
 // grid references the monopoly board
 const grid = document.getElementsByClassName("board")[0];
 
-console.log("hello");
 
 for (let i = 0; i < 36; i++) {
     // Adds tiles to monopoly, except for the already defined corners.
@@ -94,8 +93,32 @@ player.className = "piece";
 // Starts by putting the player in tile 2
 document.getElementById("2").appendChild(player);
 
-chatSocket.onopen = function (event) {
-    const data = event.data;
-    console.log(data.message);
-    display.innerHTML = data.message + " Press R to roll.";
+
+// When the websocket connects (When chatSocket gets opened),
+chatSocket.onmessage = function (event) {
+    /*
+    * The consumer sends a websocket object called event.
+    It has a bunch of headers and network configuration information, but we only want the data.
+    So, we extract the data, which is a string. But, we know that we sent a JSON object. So, we parse (convert) it into
+    * a constant variable of type JSON */
+    const data = JSON.parse(event.data);
+
+    // Check which type of message it is, then pass the data to the appropriate function
+    // Do not put any logic in the switch statement to keep it neat.
+    // Write the logic in other functions, like connect(username).
+
+    switch(data.type){
+        case "chat.connection":
+            connect(data["username"]);
+            break;
+        default:
+            // If the type is not implemented or does not exist, we error.
+            // Check if the type is misspelled.
+            console.error("Unknown event type: " + data.type);
+            break;
+    }
+}
+
+function connect(username){
+        display.innerHTML = username + ", press R to roll.";
 }
