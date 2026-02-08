@@ -1,46 +1,84 @@
 const roomName = JSON.parse(document.getElementById("room-name").textContent);
 
 
-const chatSocket = new WebSocket(
-    'ws://'
-    + window.location.host
-    + '/ws/chat/'
-    + roomName
-    + '/'
-);
+let connection = "";
 
+/*
+* https = http secure
+* wss = ws secure = websocket secure
+*
+* There are two types of get requests with normal webservers: http and https
+* http is insecure while https uses a secure signed certificate to be secure
+*
+* Websockets act like that too. To create a websocket connection, the client needs to make an http or https request
+* to the server. Once connected, it needs to ask to upgrade its connection to a websocket connection. An http connection
+* can only be upgraded to a ws connection, and an https connection can only be upgraded to a wss connection.
+*
+* When developing, we use a self-hosted development server. So, we can only make http requests without a lot of configuration.
+* But, in production, we need to use https for security and so browsers don't block our website.
+* Hence, we need to check if we are using http (development) or https (production) to determine if we must use ws or wss.
+*  */
+
+if (location.protocol === "https:") {
+    connection = 'wss://'
+        + window.location.host
+        + '/ws/chat/'
+        + roomName
+        + '/'
+} else {
+    connection = 'ws://'
+        + window.location.host
+        + '/ws/chat/'
+        + roomName
+        + '/'
+}
+
+const chatSocket = new WebSocket(connection)
+const chatBox = document.getElementById("chat-box");
 chatSocket.onmessage = function (event) {
     const data = JSON.parse(event.data);
     const message = data.message;
-    const chatBox = document.getElementById("chat-box");
-    const messageElement = document.createElement('div');
+    const username = data.username;
+    let message_div = document.createElement("div");
 
-    // timestamp stuff
-    let time = new Date().toLocaleTimeString();
-    const timestamp = document.createElement('div');
-    timestamp.className = 'timestamp';
-    timestamp.textContent = time;
-    messageElement.appendChild(timestamp);
+    let last_node = chatBox.lastChild;
+    if (last_node.firstChild != null) {
+        console.log(last_node.className);
+        if (last_node.firstChild.className !== username) {
+            let username_span = document.createElement("span");
 
-    messageElement.innerHTML += (message['user_name'] + ": " + message['message_text'] + '<br/>');
+            username_span.textContent = username;
+            username_span.classList.add(username);
 
-    chatBox.appendChild(messageElement);
-}
+            username_span.classList.add("username");
+            message_div.appendChild(username_span);
 
-document.getElementById('chat-form').focus();
+        }
 
-document.getElementById('chat-form').addEventListener('submit', handleChatMessage);
+    } else {
+        let username_span = document.createElement("span");
+        username_span.textContent = username;
+        username_span.classList.add(username);
 
-function handleChatMessage(event) {
-    // prevent page refresh
-    event.preventDefault();
-    const messageInputDom = document.getElementById('message-input');
-    const message = messageInputDom.value;
-    if (message !== '') {
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }));
-        messageInputDom.value = '';
+        username_span.classList.add("username");
+
+        message_div.appendChild(username_span);
     }
+    let message_span = document.createElement("span");
+    message_span.textContent = message;
+    message_span.className = username;
+    message_div.appendChild(message_span);
 
+    chatBox.appendChild(message_div);
 }
+
+
+const chatForm = document.getElementById("message-input");
+chatForm.focus();
+chatForm.onkeyup = function (e) {
+    if (e.key === 'Enter') {  // enter, return
+        chatSocket.send(JSON.stringify({"message": chatForm.value}));
+        chatForm.value = "";
+        chatForm.focus();
+    }
+};

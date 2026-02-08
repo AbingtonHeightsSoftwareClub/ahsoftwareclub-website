@@ -18,7 +18,7 @@ html, body, main {
 }
 
 #chat-form {
-	display: flex;    
+	display: flex;
     border: 1px solid #000000;
 	justify-content: center;
     left: 0;
@@ -46,6 +46,11 @@ input, select, textarea{
     overflow-y: auto;
     overflow-x: hidden;
     font-family: Verdana, Geneva, sans-serif;
+}
+
+.chat-box >  div{
+    display: flex;
+    flex-direction: column;
 }
 
 .timestamp {
@@ -111,4 +116,8 @@ input, select, textarea{
 
 #send-button {
 	display: none;
+}
+
+.username{
+    font-weight: bolder;
 }
