@@ -78,8 +78,8 @@ function handle_chat_message(data) {
             username_span.classList.add(username);
 
             username_span.classList.add("username");
+            add_timestamp(message_div);
             message_div.appendChild(username_span);
-
         }
 
     } else {
@@ -88,8 +88,9 @@ function handle_chat_message(data) {
         username_span.classList.add(username);
 
         username_span.classList.add("username");
-
+        add_timestamp(message_div);
         message_div.appendChild(username_span);
+
     }
     let message_span = document.createElement("span");
     message_span.textContent = message;
@@ -118,4 +119,13 @@ function handle_disconnection(data) {
     if (document.getElementById(data.userID) !== null) {
         document.getElementById(data.userID).remove()
     }
+}
+
+function add_timestamp(element) {
+    // timestamp stuff
+        let time = new Date().toLocaleTimeString();
+        const timestamp = document.createElement('div');
+        timestamp.className = 'timestamp';
+        timestamp.textContent = time;
+        element.appendChild(timestamp);
 }
