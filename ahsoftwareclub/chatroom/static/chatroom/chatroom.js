@@ -37,6 +37,33 @@ const chatSocket = new WebSocket(connection)
 const chatBox = document.getElementById("chat-box");
 chatSocket.onmessage = function (event) {
     const data = JSON.parse(event.data);
+    console.log(data)
+    switch (data.type) {
+        case "chat_message":
+            handle_chat_message(data)
+            break;
+        case "chat_connect":
+            handle_connection(data);
+            break;
+        case "chat_disconnect":
+            handle_disconnection(data);
+            break;
+    }
+
+}
+
+
+const chatForm = document.getElementById("message-input");
+chatForm.focus();
+chatForm.onkeyup = function (e) {
+    if (e.key === 'Enter') {  // enter, return
+        chatSocket.send(JSON.stringify({"message": chatForm.value}));
+        chatForm.value = "";
+        chatForm.focus();
+    }
+};
+
+function handle_chat_message(data) {
     const message = data.message;
     const username = data.username;
     let message_div = document.createElement("div");
@@ -72,13 +99,23 @@ chatSocket.onmessage = function (event) {
     chatBox.appendChild(message_div);
 }
 
+function handle_connection(data) {
+    const userBox = document.getElementById('user-count')
+    const activeUsers = data.activeUsers;
+    const activeUserIDs = data.activeUserIDs;
 
-const chatForm = document.getElementById("message-input");
-chatForm.focus();
-chatForm.onkeyup = function (e) {
-    if (e.key === 'Enter') {  // enter, return
-        chatSocket.send(JSON.stringify({"message": chatForm.value}));
-        chatForm.value = "";
-        chatForm.focus();
+    for (let i = 0; i < activeUsers.length; i++) {
+        if (document.getElementById(activeUserIDs[i]) == null) {
+            const userElement = document.createElement("div");
+            userElement.textContent += activeUsers[i];
+            userElement.id = activeUserIDs[i];
+            userBox.appendChild(userElement);
+        }
     }
-};
+}
+
+function handle_disconnection(data) {
+    if (document.getElementById(data.userID) !== null) {
+        document.getElementById(data.userID).remove()
+    }
+}
