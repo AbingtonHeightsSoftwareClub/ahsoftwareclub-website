@@ -19,12 +19,15 @@ html, body, main {
 
 #chat-form {
 	display: flex;
+    border: 1px solid #000000;
+	justify-content: center;
     left: 0;
     bottom: 0;
     width: 100%;
     text-align: center;
     padding: 10px;
     background-color: #3f3f3f;
+    z-index: 1;
 }
 
 input, select, textarea{
@@ -32,8 +35,7 @@ input, select, textarea{
 }
 
 .chat-box {
-	display: flex;
-    flex-direction: column;
+	position: relative;
     height: 97.5%;
     width: 80%;
     float: left;
@@ -45,7 +47,6 @@ input, select, textarea{
     overflow-x: hidden;
     font-family: Verdana, Geneva, sans-serif;
 }
-
 
 .chat-box >  div{
     display: flex;
@@ -98,15 +99,14 @@ input, select, textarea{
 	position: fixed;
 	background-color: #3f3f3f;
     border: 1px solid #000000;
-    height: 4%;
-    left: 12.3%;
-    width: 73%;
+    height: 7.5%;
+    width: 80%;
     bottom: 0;
     padding: 10px;
-    margin-bottom: 10px;
 }
 #room-name-bar {
-	width: 99%;
+	width: 100%;
+    height: 4%;
 	border: 1px solid #000000;
     color: #ffffff;
     background: #3f3f3f;
