@@ -31,6 +31,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # Leave room group
+        self.active_users.remove(self.user_name)
+        self.active_user_ids.remove(self.scope['user'].id)
+        print(f'active_users {self.active_users}')
+        print(f'active_user_ids {self.active_user_ids}')
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     # Receive message from WebSocket

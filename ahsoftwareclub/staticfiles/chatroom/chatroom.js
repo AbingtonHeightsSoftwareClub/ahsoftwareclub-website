@@ -52,6 +52,11 @@ chatSocket.onmessage = function (event) {
             document.getElementById('user-count').appendChild(userElement);
         }
     }
+    for(let user in document.getElementById('user-count').childNodes) {
+        if(! user.id in userIDs) {
+            document.removeChild(user)
+        }
+    }
 }
 
 document.getElementById('chat-form').focus();
