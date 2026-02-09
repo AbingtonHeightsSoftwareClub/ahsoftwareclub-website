@@ -52,7 +52,6 @@ chatSocket.onmessage = function (event) {
 
 }
 
-
 const chatForm = document.getElementById("message-input");
 chatForm.focus();
 chatForm.onkeyup = function (e) {
