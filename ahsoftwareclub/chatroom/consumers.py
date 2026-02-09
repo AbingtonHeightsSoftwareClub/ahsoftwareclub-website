@@ -49,13 +49,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print(text_data_json)
-        message = text_data_json["message"]
-        # Send message to room group
-        await self.channel_layer.group_send(
-            
-            self.room_group_name, {"type": "chat.message", "message": message, "username": self.user_name}
-        )
+        if text_data_json["type"] == "message":
+            message = text_data_json["message"]
+            # Send message to room group
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "chat.message", "message": message, "username": self.user_name}
+            )
+        elif text_data_json["type"] == "file":
+            data_url = text_data_json["dataURL"]
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "chat.file", "dataURL": data_url, "username": self.user_name}
+            )
 
     # Receive message from room group
     async def chat_message(self, event):
@@ -75,6 +79,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_disconnect(self, event):
         userID = event["userID"]
         await self.send(text_data=json.dumps({"type": "chat_disconnect", "userID": userID}))
+
+    async def chat_file(self, event):
+        username = event["username"]
+        data_url = event["dataURL"]
+        await self.send(text_data=json.dumps({"type": "chat_file", "dataURL": data_url, "username": username}))
 
     @database_sync_to_async
     def get_name(self):
