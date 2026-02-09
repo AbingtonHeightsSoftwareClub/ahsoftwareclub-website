@@ -42,6 +42,9 @@ chatSocket.onmessage = function (event) {
         case "chat_message":
             handle_chat_message(data)
             break;
+        case "chat_file":
+            handle_chat_file(data);
+            break;
         case "chat_connect":
             handle_connection(data);
             break;
@@ -49,18 +52,31 @@ chatSocket.onmessage = function (event) {
             handle_disconnection(data);
             break;
     }
-
+    const chatBox = document.getElementById('chat-box');
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 const chatForm = document.getElementById("message-input");
 chatForm.focus();
 chatForm.onkeyup = function (e) {
     if (e.key === 'Enter') {  // enter, return
-        chatSocket.send(JSON.stringify({"message": chatForm.value}));
+        chatSocket.send(JSON.stringify({"type": "message", "message": chatForm.value}));
         chatForm.value = "";
         chatForm.focus();
     }
 };
+
+// stolen from stackoverflow lmao oops
+const fileInput = document.getElementById('file-input')
+fileInput.addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    toDataURL(file, function (dataURL) {
+        chatSocket.send(JSON.stringify({
+            'type': 'file',
+            'dataURL': dataURL
+        }))
+    })
+});
 
 function handle_chat_message(data) {
     const message = data.message;
@@ -99,6 +115,23 @@ function handle_chat_message(data) {
     chatBox.appendChild(message_div);
 }
 
+function handle_chat_file(data) {
+    const dataURL = data.dataURL;
+    const username = data.username;
+    let image = document.createElement('img');
+    image.src = dataURL;
+    let username_span = document.createElement('span');
+    username_span.textContent = username;
+    username_span.classList.add(username);
+    username_span.classList.add("username");
+    let message_div = document.createElement('div');
+    add_timestamp(message_div);
+    message_div.appendChild(username_span);
+    message_div.appendChild(image);
+
+    chatBox.appendChild(message_div);
+}
+
 function handle_connection(data) {
     const userBox = document.getElementById('user-count')
     const activeUsers = data.activeUsers;
@@ -122,9 +155,19 @@ function handle_disconnection(data) {
 
 function add_timestamp(element) {
     // timestamp stuff
-        let time = new Date().toLocaleTimeString();
-        const timestamp = document.createElement('div');
-        timestamp.className = 'timestamp';
-        timestamp.textContent = time;
-        element.appendChild(timestamp);
+    let time = new Date().toLocaleTimeString();
+    const timestamp = document.createElement('div');
+    timestamp.className = 'timestamp';
+    timestamp.textContent = time;
+    element.appendChild(timestamp);
+}
+
+// stolen from a stackoverflow post with 2 likes cuz im LAZY and this looked efficient
+function toDataURL(file, callback) {
+    var reader = new FileReader();
+    reader.onloadend = function () {
+        var dataURL = reader.result;
+        callback(dataURL);
+    }
+    reader.readAsDataURL(file);
 }
