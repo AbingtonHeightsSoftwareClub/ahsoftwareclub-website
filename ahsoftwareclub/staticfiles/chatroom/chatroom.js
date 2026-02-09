@@ -72,8 +72,8 @@ fileInput.addEventListener('change', function (event) {
     const file = event.target.files[0];
     toDataURL(file, function (dataURL) {
         chatSocket.send(JSON.stringify({
-            'type': 'file',
-            'dataURL': dataURL
+            "type": "file",
+            "dataURL": dataURL
         }))
     })
 });
