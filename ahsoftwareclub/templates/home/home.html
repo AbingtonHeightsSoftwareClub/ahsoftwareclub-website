@@ -1,43 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
     <div style="margin: 10%; text-align: center;">
-        <h1>Welcome to the Software Club Website!!</h1>
+        <h1>Welcome to the Abington Heights Software Club Website!</h1>
         <h2>Here is some information about us!</h2>
     </div>
+
     {% load static %}
+
     <hr>
 
-    <div style="display: flex; align-items: flex-start; margin: 5%;">
+    <div style="display: flex; align-items: flex-start; margin: 5%;" id="gathering_place-containment_div">
         <div style="flex: 1; word-break: break-word;">
             <h3>The Gathering Place</h3>
-            <p>About two times a year, we volunteer at the Gathering Place in order to assist those who are having
+            <p style="font-size: x-large; text-align: left;">About two times a year, we volunteer at the Gathering Place in to assist those who are having
                 difficulties with technology.
-                We assist with things such as setting up email accounts, transferring data from one computer to another,
+                We assist with issues such as creating email accounts, transferring data from one computer to another,
                 fixing broken devices,
                 and other technology related issues. Sessions last about an hour and a half to two hours.
-                We are always happy to have people come to us for questions, and we have a great time helping people out
-                and teaching them about technology. We also get free food and drinks, which is always a plus!
+                We are always happy to have people come to us for questions or assistance, and we have a great time helping people out
+                and teaching them about technology.
             </p>
         </div>
-        <img src="{% static 'home/gatheringPlace.webp' %}" alt="The Gathering Place"
-             style="width:50%; height:auto; margin-left:2%;">
+
+        <img src="{% static 'home/gatheringPlace.webp' %}" alt="The Gathering Place" style="width:50%; height:auto; margin-right:2%; margin-left:2%;">
     </div>
 
     <hr>
 
-    <div style="display: flex; align-items: flex-start; margin: 5%;">
+    <div style="display: flex; align-items: flex-start; margin: 5%;" id="website-containment_div">
 
-        <img src="{% static 'home/githubSS.png' %}" alt="Website" style="width:50%; height:auto; margin-right:2%;">
+        <img src="{% static 'home/githubSS.png' %}" alt="Website" style="width:50%; height:auto; margin-right:2%; margin-left:2%;">
 
         <div style="flex: 1; word-break: break-word; text-align: right;">
-            <h3>Website</h3>
-            <p>Like it or not, you're here right now! This website was created by members of the Software Club to
+            <h3>Software Club Website</h3>
+            <p style="font-size: x-large; text-align: left;">Like it or not, you're here right now! This website was created by members of the Software Club to
                 showcase our projects and provide a platform for our members to interact.
                 It features a chatroom where members can communicate , a monopoly game that can (soon) be played with
-                friends. The website is currently being migrated from Flask to Django,
-                a popular web framework for Python, and incorporates various web technologies such as HTML, CSS, and
-                JavaScript.
+                friends. The website is currently being migrated from Flask to Django because our President is evil.
                 We hope you enjoy exploring the site and participating in our projects!
             </p>
         </div>
@@ -46,46 +47,43 @@
 
     <hr>
 
-    <div style="display: flex; align-items: flex-start; margin: 5%;">
-        <div style="flex: 1; word-break: break-word;">
-            <h3>The Computer Club</h3>
-            <p>While not technically part of the Software Club, the Computer Club is a sister club that focuses on
-                hardware and physical computing.
-                They take in donations of old computers, repair them, and then give them to people in need.
-                We often collaborate with them on projects and events, and many members are part of both clubs.
-                The Computer Club is a great place to learn about building and repairing computers.
-                If you're interested in hardware or just want to learn more about computers, or you are having issues
-                with your computer, we highly recommend checking out the Computer Club!
+    <div style="display: flex; align-items: flex-start; margin: 5%;" id="mtfc-containment_div">
+
+        <div style="flex: 1; word-break: break-word; text-align: left;">
+            <h3>Modeling the Gruture Challenge</h3>
+            <p style="font-size: x-large; text-align: left;">This year, the Software Club is participating in the Modeling the Gruture Challenge.
+                This challenge is a wonderful opportunity for us to learn about data sciences, and to apply our skills to
+                real-world problems.
+                If we succeed, we will be able to take over the Pope's job, and we will get $25,000 to spend on Chicago
+                Deep Dish Pizza, we are a <s>fifth</s> <s>tenth</s> quarter of the way there.
+                We are currently working on our project on Signalized Intersections, and brainstroming ways to make them more efficent and safe.
             </p>
         </div>
-        <img src="{% static 'home/DavidFunny.webp' %}" alt="The Computer Club Assisting Us At The Gathering Place"
-             style="width:50%; height:auto; margin-left:2%;">
+
+        <img src="{% static 'home/MTFC.jpg' %}" alt="Modeling The Gruture" style="width:50%; height:auto; margin-right:2%; margin-left:2%;">
+
     </div>
 
     <hr>
 
-    <div style="display: flex; align-items: flex-start; margin: 5%;">
+    <div style="display: flex; align-items: flex-start; margin: 5%;" id="mtfc-containment_div">
 
-        <img src="{% static 'home/MTFC.jpg' %}" alt="The Gathering Place"
-             style="width:50%; height:auto; margin-right:2%;">
+        <img src="{% static 'home/DavidFunny.webp' %}" alt="David Looking Handsomely at a Computer" style="width:50%; height:auto; margin-right:2%; margin-left:2%;">
 
         <div style="flex: 1; word-break: break-word; text-align: right;">
-            <h3>Modeling the Future Challenge</h3>
-            <p>This year, the Software Club is hoping to participate in the Modeling the Future Challenge.
-                This challenge is a wonderful opportunity for us to learn about data science, and to apply our skills to
-                real-world problems.
-                If we succeed, we will be able to take over the Pope's job, and we will get $25,000 to spend on Chicago
-                Deep Dish Pizza.
-                We are currently in the process of creating our team(s) and brainstorming ideas for our project.
-                If you're interested in participating, consider joining the Software Club.
+            <h3>The Computer Club</h3>
+            <p style="font-size: x-large; text-align: left;">The Computer Club is a sub-group within the Software Club that focuses primarly on the hardware side of computers.
+                They repair and donate broken computers to those in need, along with frequently collaborating with us on various projects.
+                A majortity of Software Club members are also apart of Computer Club. 
+                Contrary to popular belief, they are not their own independent club and they should never be regarded as such, efforts to silence those who object are underway.
             </p>
         </div>
-
     </div>
 
     <footer style="text-align: center;">
         <hr>
-        <a href="mailto:allisons27@hsnet.ahsd.org">Contact Us!</a>
+        <a style="margin-top: 5%"; href="mailto:allisons27@hsnet.ahsd.org">Contact Us!</a>
         <hr>
     </footer>
+    
 {% endblock %}
