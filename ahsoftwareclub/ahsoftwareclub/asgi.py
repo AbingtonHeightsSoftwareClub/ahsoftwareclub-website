@@ -26,9 +26,9 @@ from monopoly.routing import monopoly_websocket_urlpatterns
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
-        "websocket": AllowedHostsOriginValidator(
+        "websocket":
             # Each set of url patterns is a list of routes. We add together each list to combine the lists, which combine the routes
-            URLRouter(chatroom_websocket_urlpatterns + monopoly_websocket_urlpatterns)
+            URLRouter(chatroom_websocket_urlpatterns + monopoly_websocket_urlpatterns
         ),
     }
 )
