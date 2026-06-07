@@ -31,7 +31,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         else:
             try:
                 query_params = dict(urllib.parse.parse_qsl(self.scope["query_string"].decode()))
-                self.user_name = query_params.get("user", "MobileGuest")
+                self.user_name = query_params.get("user", "Anonymous")
             except Exception:
                 self.user_name = "Anonymous"
             username_to_send = self.user_name
@@ -109,7 +109,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 return user.get_username()
             except Exception:
                 return user.username
-        return "MobileGuest"
+        return "Anonymous"
 
     @sync_to_async
     def get_group_users_sync(self, group_name):
