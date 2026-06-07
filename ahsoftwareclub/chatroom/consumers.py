@@ -45,11 +45,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         })
 
     async def disconnect(self, close_code):
-        # tell everyone they left so it removes them from the activeUsers list
-        await self.channel_layer.group_send(self.room_group_name, {
-            "type": "chat.disconnect",
-            "userID": self.scope["user"].id
-        })
+        user_id = self.scope["user"].id if self.scope["user"].is_authenticated else 0
+
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "chat.disconnect",
+                "userID": user_id
+            }
+        )
 
         # Leave room group
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
