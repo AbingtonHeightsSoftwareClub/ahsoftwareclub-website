@@ -13,6 +13,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = None
         self.room_name = None
 
+    import urllib.parse
+
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
@@ -23,8 +25,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         if self.scope.get("user") and self.scope["user"].is_authenticated:
-            self.user_name = await self.get_name()
-            username_to_send = self.scope["user"].username
+            self.user_name = self.scope["user"].username
+            username_to_send = self.user_name
             user_id_to_send = self.scope["user"].id
         else:
             try:
@@ -35,28 +37,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
             username_to_send = self.user_name
             user_id_to_send = 0
 
-        active_users, active_user_ids = [], []
-        try:
-            users = await self.get_group_users_sync(self.room_name)
-            for user in users:
-                if user and hasattr(user, 'username'):
-                    active_users.append(user.username)
-                    active_user_ids.append(user.id)
-        except Exception as e:
-            print(f"Error fetching group users: {e}")
-            active_users.append(username_to_send)
-            active_user_ids.append(user_id_to_send)
-
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 "type": "chat.connect",
                 "username": username_to_send,
-                "active_users": active_users,
-                "active_user_ids": active_user_ids
+                "active_users": [username_to_send],
+                "active_user_ids": [user_id_to_send]
             }
         )
-
     async def disconnect(self, close_code):
         user_id = self.scope["user"].id if self.scope["user"].is_authenticated else 0
 
