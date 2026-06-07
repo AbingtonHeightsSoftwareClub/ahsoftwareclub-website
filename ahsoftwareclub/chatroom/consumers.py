@@ -33,7 +33,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 query_params = dict(urllib.parse.parse_qsl(self.scope["query_string"].decode()))
                 self.user_name = query_params.get("user", "MobileGuest")
             except Exception:
-                self.user_name = "MobileGuest"
+                self.user_name = "Anonymous"
             username_to_send = self.user_name
             user_id_to_send = 0
 
