@@ -1,5 +1,5 @@
 import json
-
+import urllib.parse
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
@@ -16,7 +16,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
-        self.user_name = await self.get_name()
+        if self.scope["user"].is_authenticated:
+            self.user_name = await self.get_name()
+            username_to_send = self.scope["user"].username
+            user_id_to_send = self.scope["user"].id
+        else:
+            query_params = dict(urllib.parse.parse_qsl(self.scope["query_string"].decode()))
+            self.user_name = query_params.get("user", "MobileGuest")
+            username_to_send = self.user_name
+            user_id_to_send = 0
 
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -31,7 +39,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             active_user_ids.append(user.id)
         await self.channel_layer.group_send(self.room_group_name, {
             "type": "chat.connect",
-            "username": self.scope["user"].username,
+            "username": username_to_send,
             "active_users": active_users,
             "active_user_ids": active_user_ids
         })
