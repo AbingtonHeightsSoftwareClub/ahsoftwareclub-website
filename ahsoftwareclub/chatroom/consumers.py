@@ -17,7 +17,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
 
-        #JUST FREAKING ACCEPT IT
+        # JUST FREAKING ACCEPT IT
         await self.accept()
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -93,14 +93,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         username = event["username"]
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"type": "chat_message", "message": message, "username":username}))
+        await self.send(text_data=json.dumps({"type": "chat_message", "message": message, "username": username}))
 
     async def chat_connect(self, event):
         username = event["username"]
         active_users = event["active_users"]
         active_user_ids = event["active_user_ids"]
 
-        await self.send(text_data=json.dumps({"type": "chat_connect", "username": username, "activeUsers": active_users, "activeUserIDs": active_user_ids}))
+        await self.send(text_data=json.dumps({"type": "chat_connect", "username": username, "activeUsers": active_users,
+                                              "activeUserIDs": active_user_ids}))
 
     async def chat_disconnect(self, event):
         userID = event["userID"]
@@ -114,10 +115,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_name(self):
         user = self.scope["user"]
-        return user.get_username()
+        if user and user.is_authenticated:
+            try:
+                return user.get_username()
+            except Exception:
+                return user.username
+        return "MobileGuest"
 
     @sync_to_async
     def get_group_users_sync(self, group_name):
-        group = Group.objects.get(name=group_name)
-        users_list = list(group.user_set.all())
-        return users_list
+        try:
+            group = Group.objects.get(name=group_name)
+            users_list = list(group.user_set.all())
+            return users_list
+        except Exception as e:
+            print(f"Database query failed: {e}")
+            return []
