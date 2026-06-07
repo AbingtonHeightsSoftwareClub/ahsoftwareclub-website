@@ -16,33 +16,46 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
-        if self.scope["user"].is_authenticated:
+
+        #JUST FREAKING ACCEPT IT
+        await self.accept()
+
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
+        if self.scope.get("user") and self.scope["user"].is_authenticated:
             self.user_name = await self.get_name()
             username_to_send = self.scope["user"].username
             user_id_to_send = self.scope["user"].id
         else:
-            query_params = dict(urllib.parse.parse_qsl(self.scope["query_string"].decode()))
-            self.user_name = query_params.get("user", "MobileGuest")
+            try:
+                query_params = dict(urllib.parse.parse_qsl(self.scope["query_string"].decode()))
+                self.user_name = query_params.get("user", "MobileGuest")
+            except Exception:
+                self.user_name = "MobileGuest"
             username_to_send = self.user_name
             user_id_to_send = 0
 
-        # Join room group
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        active_users, active_user_ids = [], []
+        try:
+            users = await self.get_group_users_sync(self.room_name)
+            for user in users:
+                if user and hasattr(user, 'username'):
+                    active_users.append(user.username)
+                    active_user_ids.append(user.id)
+        except Exception as e:
+            print(f"Error fetching group users: {e}")
+            active_users.append(username_to_send)
+            active_user_ids.append(user_id_to_send)
 
-        await self.accept()
-
-        # send a message saying someone connected (and tell the person who connected who's here)
-        active_users, active_user_ids= [], []
-        users = await self.get_group_users_sync(self.room_name)
-        for user in users:
-            active_users.append(user.username)
-            active_user_ids.append(user.id)
-        await self.channel_layer.group_send(self.room_group_name, {
-            "type": "chat.connect",
-            "username": username_to_send,
-            "active_users": active_users,
-            "active_user_ids": active_user_ids
-        })
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "chat.connect",
+                "username": username_to_send,
+                "active_users": active_users,
+                "active_user_ids": active_user_ids
+            }
+        )
 
     async def disconnect(self, close_code):
         user_id = self.scope["user"].id if self.scope["user"].is_authenticated else 0
