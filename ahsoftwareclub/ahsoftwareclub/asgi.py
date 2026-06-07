@@ -28,7 +28,7 @@ application = ProtocolTypeRouter(
         "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
             # Each set of url patterns is a list of routes. We add together each list to combine the lists, which combine the routes
-            AuthMiddlewareStack(URLRouter(chatroom_websocket_urlpatterns + monopoly_websocket_urlpatterns))
+            URLRouter(chatroom_websocket_urlpatterns + monopoly_websocket_urlpatterns)
         ),
     }
 )
