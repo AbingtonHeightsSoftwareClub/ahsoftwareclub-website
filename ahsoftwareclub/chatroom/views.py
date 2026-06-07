@@ -12,21 +12,30 @@ from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from sqlalchemy.sql.functions import user
 
-@login_required(login_url='/accounts/login/')
+
 def chatroom(request, room_name):
-    user = request.user
+    try:
+        user = request.user
+    except:
+        user = None
     all_groups_list = []
     # for checking if they're in any groups or not
     for group in Group.objects.all():
         all_groups_list.append(group.name)
     # If they're in a room, remove them from it
-    if user.groups.filter(name__in=all_groups_list).exists():
-        for group in user.groups.all():
-            group.user_set.remove(user)
+    if user is not None:
+        if user.groups.filter(name__in=all_groups_list).exists():
+            for group in user.groups.all():
+                group.user_set.remove(user)
     room = Group.objects.get(name=room_name)
     # add the user to the room
-    room.user_set.add(user)
-    return render(request, 'chatroom/chatroom.html', context={'room_name': room_name, 'active_users' : room.user_set.all(), room_name:room_name})
+    try:
+        room.user_set.add(user)
+    except:
+        print("didn't work lol")
+    return render(request, 'chatroom/chatroom.html',
+                  context={'room_name': room_name, 'active_users': room.user_set.all(), room_name: room_name})
+
 
 # Configure CSRF when we add room passwords to make things secure.
 @csrf_exempt
