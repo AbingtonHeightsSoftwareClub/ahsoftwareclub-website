@@ -1,8 +1,5 @@
 import json
 
-from .models import GroupMessage
-from .models import ChatGroup
-
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
@@ -23,7 +20,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.create_chat_group()
 
         await self.accept()
 
@@ -39,11 +35,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             "active_users": active_users,
             "active_user_ids": active_user_ids
         })
-        if(len(active_users) > 1):
-            await self.channel_layer.send(self.room_group_name, {
-                "type": "chat.load",
-                "messages": await self.get_group_messages_sync(await self.get_user_chat_group)
-            })
 
     async def disconnect(self, close_code):
         # tell everyone they left so it removes them from the activeUsers list
@@ -65,10 +56,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 self.room_group_name, {"type": "chat.message", "message": message, "username": self.user_name}
             )
-            
-            group = self.get_user_group()
-            GroupMessage.objects.create(group=group, author=self.scope["user"], body=message)
-
         elif text_data_json["type"] == "file":
             data_url = text_data_json["dataURL"]
             await self.channel_layer.group_send(
@@ -90,13 +77,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.send(text_data=json.dumps({"type": "chat_connect", "username": username, "activeUsers": active_users, "activeUserIDs": active_user_ids}))
 
-    async def chat_load(self, event):
-        messages = event["messages"]
-        messages_list = []
-        for message in messages:
-            messages_list.append({"author": message.author.username, "body": message.body})
-        await self.send(text_data=json.dumps({"type": "chat_load", "messages": messages_list}))
-        
     async def chat_disconnect(self, event):
         userID = event["userID"]
         await self.send(text_data=json.dumps({"type": "chat_disconnect", "userID": userID}))
@@ -116,17 +96,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
         group = Group.objects.get(name=group_name)
         users_list = list(group.user_set.all())
         return users_list
-    
-    @sync_to_async
-    def get_group_messages_sync(self, chat_group):
-        messages = GroupMessage.objects.filter(group=chat_group)
-        messages_list = list(messages)
-        return messages_list
-    
-    @sync_to_async
-    def get_user_chat_group(self):
-        return ChatGroup.objects.filter(group_name=self.room_group_name).all()[0]
-    
-    @sync_to_async
-    def create_chat_group(self):
-        ChatGroup.objects.create(group_name=self.room_group_name)

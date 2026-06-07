@@ -171,10 +171,3 @@ function toDataURL(file, callback) {
     }
     reader.readAsDataURL(file);
 }
-
-function load_chat(messages) {
-    for (let i = 0; i < messages.length; i++) {
-        const message = messages[i];
-        handle_chat_message({"message": message.body, "username": message.author})
-    }
-}
