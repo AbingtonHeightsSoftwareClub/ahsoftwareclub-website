@@ -81,17 +81,6 @@ for (let i = 0; i < 36; i++) {
     grid.append(item);
 }
 
-// Creates an image that is the player
-const player = document.createElement('img');
-// Makes the image a hat
-player.src = "/static/monopoly/monopoly_piece_1.svg";
-// Lets javascript know what the player is referenced as
-player.id = "monopoly-1";
-// Gives the player a class, so the CSS makes it pretty
-player.className = "piece";
-
-// Starts by putting the player in tile 2
-document.getElementById("2").appendChild(player);
 
 
 // When the websocket connects (When chatSocket gets opened),
@@ -108,8 +97,11 @@ chatSocket.onmessage = function (event) {
     // Write the logic in other functions, like connect(username).
 
     switch(data.type){
-        case "chat.connection":
-            connect(data["username"]);
+        case "chat_connection":
+            connect(data);
+            break;
+        case "monopoly_roll":
+            handle_monopoly_roll(data);
             break;
         default:
             // If the type is not implemented or does not exist, we error.
@@ -119,6 +111,51 @@ chatSocket.onmessage = function (event) {
     }
 }
 
-function connect(username){
-        display.innerHTML = username + ", press R to roll.";
+document.addEventListener("keydown", function (event){
+    switch (event.code){
+        case "KeyR":
+            chatSocket.send(JSON.stringify({"type": "roll"}));
+            break;
+    }
+})
+
+function connect(data){
+        const activeUsers = data.activeUsers;
+
+        display.innerHTML = data["username"] + ", press R to roll.";
+
+        // Creates an image that is the player
+        const player = document.createElement('img');
+        // Makes the image a hat
+        player.src = "/static/monopoly/monopoly_piece_1.svg";
+        // Lets javascript know what the player is referenced as
+        player.id = data["username"];
+        // Gives the player a class, so the CSS makes it pretty
+        player.className = "piece";
+
+        // Starts by putting the player in tile 2
+        document.getElementById("2").appendChild(player);
+
+        for (let i = 0; i < activeUsers.length; i++) {
+            if (document.getElementById(activeUsers[i]) == null) {
+                const player = document.createElement('img');
+                player.src = "/static/monopoly/monopoly_piece_1.svg";
+                player.id = activeUsers[i];
+                player.className = "piece";
+                document.getElementById("2").appendChild(player);
+            }
+        }
+
+}
+
+function handle_monopoly_roll(data) {
+    const roll = data["roll"];
+    const username = data["username"];
+    const position = data["current_position"];
+
+    display.innerHTML = username + " rolled a " + roll;
+
+    let span = document.getElementById(position);
+
+    span.append(document.getElementById(username));
 }
